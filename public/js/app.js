@@ -1,0 +1,1 @@
+var steamApi = angular.module('steamApi', ['steamAPIControllers', 'steamAPIFilters']);
