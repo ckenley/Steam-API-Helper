@@ -5,7 +5,8 @@ var express = require('express');
 var http = require('http'),
 url = require('url'),
 path = require('path'),
-fs = require('fs');
+fs = require('fs'),
+apikey = require('../secret/apikey');
 
 var router = express.Router();
 
@@ -16,7 +17,7 @@ router.get('/', function(req, res) {
     var options = {
         hostname: "api.steampowered.com",
         method: query.httpmethod,
-        path: query.api + "/" + query.method + "/v000" + query.version + "/"
+        path: "/" + query.api + "/" + query.method + "/v000" + query.version + "/"
     };
 
     //Building the request path
@@ -27,31 +28,39 @@ router.get('/', function(req, res) {
         var firstKey = pathKeys.pop();
         options.path += "?" + firstKey + "=" + query[firstKey];
         pathKeys.forEach(function(key) {
-            options.path += "&" + key + "=" + query[key];
+        	if(key !== 'key'){
+        		options.path += "&" + key + "=" + query[key];
+        	}
         });
+        options.path += "&key=" + apikey.apikey
     }
     // end request path
     
+    console.log(options);
     //Use Options to make the Steam API request
-    /*
 	var request = http.request(options, function(response) {
-		console.log('STATUS: ' + response.statusCode);
-		console.log('HEADERS: ' + JSON.stringify(response.headers));
+		var str = '';
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-			res.write(chunk);
+			str += chunk;
 		});
+		response.on('end', function(chunk){
+			res.setHeader("Content-type", "application/json");
+			res.end(str);
+		})
 	});
 	
 	request.on('error', function(e) {
 		console.log('problem with request: ' + e.message);
 	});
+
+    
 	request.end();
-	*/
+	/*
 	//End Steam API Request
     res.set('Content-type', 'application/json');
     res.write(JSON.stringify(options));
-    res.end();
+    */
     return; // end request to /api
     
   //res.render('index', { title: 'Express' });

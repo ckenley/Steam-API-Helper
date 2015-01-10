@@ -1,24 +1,21 @@
 /**
  *
  */
-var http = require('http'),
-    url = require('url'),
-    path = require('path'),
-    fs = require('fs');
-
-
-var express = require('express');
+var http = require('http');
+var url = require('url');
 var path = require('path');
+var fs = require('fs');
 var favicon = require('serve-favicon');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var express = require('express');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
 
 //Log file
-var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'})
+var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
 
 var app = express();
 
@@ -70,5 +67,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-app.listen(3010);
+var port = 3010;
+console.log('Server listening on port ' + port);
+app.listen(port);
 module.exports = app;
